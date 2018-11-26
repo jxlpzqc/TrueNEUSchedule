@@ -1,0 +1,42 @@
+<html>
+<head>
+    <title>真•课程表</title>
+    <link href="{{ url_for("static",filename = 'css/main.css') }}" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<table>
+    <tr>
+        <td></td>
+        <td>周一</td>
+        <td>周二</td>
+        <td>周三</td>
+        <td>周四</td>
+        <td>周五</td>
+        <td>周六</td>
+        <td>周日</td>
+    </tr>
+    {#            <tr><td>1-2</td><td id="c_11"></td><td id="c_21"></td><td id="c_31"></td><td id="c_41"></td><td id="c_51"></td><td id="c_61"></td><td id="c_71"></td></tr>#}
+    {#            <tr><td>3-4</td><td id="c_12"></td><td id="c_22"></td><td id="c_32"></td><td id="c_42"></td><td id="c_52"></td><td id="c_62"></td><td id="c_72"></td></tr>#}
+    {#            <tr><td>5-6</td><td id="c_13"></td><td id="c_23"></td><td id="c_33"></td><td id="c_43"></td><td id="c_53"></td><td id="c_63"></td><td id="c_73"></td></tr>#}
+    {#            <tr><td>7-8</td><td id="c_14"></td><td id="c_24"></td><td id="c_34"></td><td id="c_44"></td><td id="c_54"></td><td id="c_64"></td><td id="c_74"></td></tr>#}
+    {#            <tr><td>9-10</td><td id="c_15"></td><td id="c_25"></td><td id="c_35"></td><td id="c_45"></td><td id="c_55"></td><td id="c_65"></td><td id="c_75"></td></tr>#}
+    {#            <tr><td>11-12</td><td id="c_16"></td><td id="c_26"></td><td id="c_36"></td><td id="c_46"></td><td id="c_56"></td><td id="c_66"></td><td id="c_76"></td></tr>#}
+    {% for i in range(1,7) %}
+        <tr>
+            <td>{{ i*2-1 }}-{{ i*2 }}</td>
+            {% for j in range(1,8) %}
+                {% set x =  table.get_course(12,j,i) %}
+                <td>
+{#                {{ x }}#}
+                    {{ x['name'] }}<br/>
+                    {{ x.teacher }}<br/>
+                    {{ x.classroom }}<br/>
+                </td>
+            {% endfor %}
+        </tr>
+    {% endfor %}
+
+</table>
+</body>
+
+</html>

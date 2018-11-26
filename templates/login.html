@@ -1,0 +1,17 @@
+<html>
+    <head>
+        <title>登录</title>
+    </head>
+    <body>
+        <form action="{{ url_for("do_login") }}" method="post">
+            用户名：
+            <input name="username" >
+            密码：
+            <input name="password" type="password">
+            验证码:
+            <input name="code">
+            <img src="data:jpg/png;base64,{{ img_base64 |safe}}" />
+            <input type="submit" >
+        </form>
+    </body>
+</html>
