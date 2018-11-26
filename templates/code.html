@@ -1,6 +1,8 @@
-       <form action="{{ url_for("do_import_class") }}" method="post">
-            验证码:
-            <input name="code">
-            <img src="data:jpg/png;base64,{{ img_base64 |safe}}" />
-            <input type="submit" >
-        </form>
+{#   <form action="{{ url_for("do_import_class") }}" method="post">#}
+        验证码:
+
+    <input name="code" id="code" class="form-control">
+    <img width="100%" style="margin-top:5px;" src="data:jpg/png;base64,{{ img_base64 |safe}}" />
+
+{#        <input type="submit" >#}
+{#    </form>#}

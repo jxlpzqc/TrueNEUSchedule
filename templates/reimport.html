@@ -1,0 +1,42 @@
+<html>
+<head>
+    <title>登录 - 真•课程表</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://cdn.bootcss.com/twitter-bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/twitter-bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script>
+
+        function check() {
+
+            var btn = $("#button-login");
+            btn.attr("disabled", true);
+            btn.val("正在导入...");
+            return true;
+
+        }
+
+    </script>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-xs-0 col-sm-2 col-md-3 col-lg-4"></div>
+        <div class="col-xs-12 col-sm-8 col-md-6 col-lg-4" style="margin-top: 20%">
+            <h1>重新导入</h1>
+            <form id="mainForm" action="{{ url_for("do_reimport") }}" method="post" onsubmit="check()">
+
+                <div id="code-div" class="form-group">
+                    <input name="code" class="form-control">
+                    <img width="100%" style="margin-top:5px;" src="data:jpg/png;base64,{{ img_base64 |safe }}"/>
+
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="重新导入" id="button-login" class="btn w-100 btn-primary">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
