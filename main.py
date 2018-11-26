@@ -4,11 +4,7 @@ from catch import *
 from flask import *
 from flask_sqlalchemy import *
 
-
-
 app = Flask(__name__)
-# app.config['SECRET_KEY'] = os.urandom(24)
-# app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(days=7)
 app.config.from_object('settings')
 db = SQLAlchemy(app)
 
@@ -22,25 +18,13 @@ def index():
 	else:
 		return redirect(url_for('login'))
 
+
 @app.route('/login')
 def login():
-	#TODO: 注意内存泄漏
-	if not ('con_id' in session.keys()):
-		id = str(time.time()) + str(random.uniform(0, 100))
-		# 防止重复
-		while id in connection.keys():
-			id = str(time.time()) + str(random.uniform(0, 100))
-		session['con_id'] = id
-	else:
-		id = session['con_id']
-
-	img = c_login(id)
+	img, jid = c_login()
+	session['j_id'] = jid
 
 	img_base64 = base64.b64encode(img).decode('utf-8')
-	# with open('m.jpg', 'wb') as f:
-	#     f.write(img)
-
-	# print(connection)
 
 	return render_template("login.html", img_base64=img_base64)
 
@@ -48,22 +32,21 @@ def login():
 @app.route("/class")
 def show_class():
 	tb = session.get("table")
-	return render_template("class.html",table = Table(tb))
+	return render_template("class.html", table=Table(tb))
+
 
 @app.route("/do_login", methods=['POST'])
 def do_login():
-	con_id = session['con_id']
+	jid = session['j_id']
 	username = request.form.get("username")
 	password = request.form.get("password")
 	code = request.form.get("code")
-	tb = c_get_table(con_id, username, password, code)
+	tb = c_get_table(jid, username, password, code)
 	if tb is None:
 		return "用户名或密码错误"
 	else:
 		session['table'] = str(tb)
 		return redirect(url_for("show_class"))
-
-	#return render_template("class.html",table=tb)
 
 
 if __name__ == '__main__':

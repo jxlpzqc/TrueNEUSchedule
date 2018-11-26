@@ -1,12 +1,13 @@
-from requests import *
+import requests
 from bs4 import *
 from table import Table
 
+
 # 此处注意考虑线程安全问题
-connection = {}
+# connection = {}
 
 
-def c_login(con_id):
+def c_login():
 	"""
 	记录用户，并获取验证码图片
 	:return: 验证码图片
@@ -14,24 +15,21 @@ def c_login(con_id):
 	# get cookie and validate code
 	login_view_url = 'https://zhjw.neu.edu.cn/'
 
-	if con_id in connection.keys():
-		s = connection[con_id]
-	else:
-		s = session()
-		connection[con_id] = s
+	login_view_resp = requests.get(login_view_url)
 
-	login_view_resp = s.get(login_view_url)
+	jid = login_view_resp.cookies['JSESSIONID']
 
 	soup = BeautifulSoup(login_view_resp.text, 'html.parser')
 	img_url = login_view_url + soup.find_all('img')[2]['src']
-	img_resp = s.get(img_url)
-	return img_resp.content
+	cookies = dict(JSESSIONID=jid)
+	img_resp = requests.get(img_url, cookies=cookies)
+	return img_resp.content, jid
 
 
-def c_get_table(con_id, username, password, code):
+def c_get_table(jid, username, password, code):
 	"""
 
-	:param con_id: 连接id
+	:param jid: 连接id
 	:param username: 用户名
 	:param password: 密码
 	:param code: 验证码
@@ -41,11 +39,11 @@ def c_get_table(con_id, username, password, code):
 	login_url = 'https://zhjw.neu.edu.cn/ACTIONLOGON.APPPROCESS?mode='
 	login_data = {'WebUserNO': username, 'Password': password, 'Agnomen': code, 'submit7': '%B5%C7%C2%BC'}
 	table_url = 'https://zhjw.neu.edu.cn/ACTIONQUERYSTUDENTSCHEDULEBYSELF.APPPROCESS'
+	cookies = dict(JSESSIONID=jid)
 
-	s = connection[con_id]
-	login_resp = s.post(login_url, login_data)
+	login_resp = requests.post(login_url, login_data, cookies=cookies)
 	if "网络综合平台" in login_resp.text:
-		table_html = s.get(table_url).text
+		table_html = requests.get(table_url, cookies=cookies).text
 		# print(table_html)
 		soup = BeautifulSoup(table_html, "html.parser")
 		md = soup.find("table", {'border': '0', 'align': 'center'}).find_all('tr')[2:]
