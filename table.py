@@ -44,7 +44,7 @@ class Table:
 		if json_text is None:
 			pass
 		else:
-			self.__courses = json_text.loads(json_text)
+			self.__courses = json.loads(json_text)
 
 	def __repr__(self):
 		return json.dumps(self.__courses)

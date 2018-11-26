@@ -4,6 +4,8 @@ from catch import *
 from flask import *
 from flask_sqlalchemy import *
 
+
+
 app = Flask(__name__)
 # app.config['SECRET_KEY'] = os.urandom(24)
 # app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(days=7)
@@ -12,13 +14,17 @@ db = SQLAlchemy(app)
 
 import models
 
-@app.route('/class')
-def showclass():
-	return render_template("class.html")
-
 
 @app.route('/')
+def index():
+	if 'table' in session.keys():
+		return redirect(url_for('show_class'))
+	else:
+		return redirect(url_for('login'))
+
+@app.route('/login')
 def login():
+	#TODO: 注意内存泄漏
 	if not ('con_id' in session.keys()):
 		id = str(time.time()) + str(random.uniform(0, 100))
 		# 防止重复
@@ -39,6 +45,11 @@ def login():
 	return render_template("login.html", img_base64=img_base64)
 
 
+@app.route("/class")
+def show_class():
+	tb = session.get("table")
+	return render_template("class.html",table = Table(tb))
+
 @app.route("/do_login", methods=['POST'])
 def do_login():
 	con_id = session['con_id']
@@ -49,7 +60,8 @@ def do_login():
 	if tb is None:
 		return "用户名或密码错误"
 	else:
-		return render_template("class.html",table = tb)
+		session['table'] = str(tb)
+		return redirect(url_for("show_class"))
 
 	#return render_template("class.html",table=tb)
 
