@@ -13,5 +13,4 @@ class ClassJson(db.Model):
 		self.password = password
 		self.json = json
 
-	def get_table(self):
-		return Table(self.json)
+
